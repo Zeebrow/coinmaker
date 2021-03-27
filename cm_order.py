@@ -33,7 +33,7 @@ class Order:
     """
     def __init__(self):  
         self._id = None
-        self.product_id = 'None'
+        self.product_id = None
         self.profile_id = None
         self.side = None
         self.funds = None
@@ -48,28 +48,34 @@ class Order:
         self.executed_value = None
         self.status = None
         self.settled = None
+        self.order = self._set_order()
 
-    
+    def _set_order(self):
+        _order = NT_Order(
+        self._id,
+        self.product_id,
+        self.profile_id,
+        self.side,
+        self.funds,
+        self.specified_funds,
+        self._type,
+        self.post_only,
+        self.created_at,
+        self.done_at,
+        self.done_reason,
+        self.fill_fees,
+        self.filled_size,
+        self.executed_value,
+        self.status,
+        self.settled
+        )
+        return _order
+
     def __repr__(self):
-        return 'asdf'
-        # return NT_Order(
-        #     self._id,
-        #     self.product_id,
-        #     self.profile_id,
-        #     self.side,
-        #     self.funds,
-        #     self.specified_funds,
-        #     self._type,
-        #     self.post_only,
-        #     self.created_at,
-        #     self.done_at,
-        #     self.done_reason,
-        #     self.fill_fees,
-        #     self.filled_size,
-        #     self.executed_value,
-        #     self.status,
-        #     self.settled
-        # )
+        return self.order
+
+    def show(self, indent=2):
+        print(json.dumps(self.order, indent=indent))
 
     def persist(self, database_connection):
         """
