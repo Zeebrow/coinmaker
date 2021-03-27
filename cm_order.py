@@ -48,10 +48,10 @@ class Order:
         self.executed_value = None
         self.status = None
         self.settled = None
-        self.order = self._set_order()
+        self._set_order()
 
     def _set_order(self):
-        _order = NT_Order(
+        self.order = NT_Order(
         self._id,
         self.product_id,
         self.profile_id,
@@ -69,7 +69,7 @@ class Order:
         self.status,
         self.settled
         )
-        return _order
+        return self.order
 
     def __repr__(self):
         return self.order
