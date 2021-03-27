@@ -1,5 +1,6 @@
 import sys
 import cbpro
+import cm_order, cm_coin, cm_split
 
 """
 Coin Maker
@@ -18,6 +19,9 @@ TODO: learn about stop orders
 """
 
 
-
+a = cm_order.Order
 
 print("Coin Maker")
+print("------------------------------------")
+
+print(a)

@@ -4,14 +4,14 @@ import json
 # Order is a fundamental component of coinmaker.
 # Orders should be able to be seamlessly passed around different parts of the program. 
 # Using collections.namedtuple for immutablity
-Order = collections.namedtuple('Order', [
-'_id',
+NT_Order = collections.namedtuple('Order', [
+'id',
 'product_id',
 'profile_id',
 'side',
 'funds',
 'specified_funds',
-'_type',
+'type',
 'post_only',
 'created_at',
 'done_at',
@@ -23,10 +23,6 @@ Order = collections.namedtuple('Order', [
 'settled'
 ])
 
-_dict_order = {
-
-}
-
 class Order:
     """
     Defining an Order object as it appears in the CB Pro console.
@@ -37,7 +33,7 @@ class Order:
     """
     def __init__(self):  
         self._id = None
-        self.product_id = None
+        self.product_id = 'None'
         self.profile_id = None
         self.side = None
         self.funds = None
@@ -55,24 +51,25 @@ class Order:
 
     
     def __repr__(self):
-        return order(
-            self.id,
-            self.product_id,
-            self.profile_id,
-            self.side,
-            self.funds,
-            self.specified_funds,
-            self.type,
-            self.post_only,
-            self.created_at,
-            self.done_at,
-            self.done_reason,
-            self.fill_fees,
-            self.filled_size,
-            self.executed_value,
-            self.status,
-            self.settled
-        )
+        return 'asdf'
+        # return NT_Order(
+        #     self._id,
+        #     self.product_id,
+        #     self.profile_id,
+        #     self.side,
+        #     self.funds,
+        #     self.specified_funds,
+        #     self._type,
+        #     self.post_only,
+        #     self.created_at,
+        #     self.done_at,
+        #     self.done_reason,
+        #     self.fill_fees,
+        #     self.filled_size,
+        #     self.executed_value,
+        #     self.status,
+        #     self.settled
+        # )
 
     def persist(self, database_connection):
         """
