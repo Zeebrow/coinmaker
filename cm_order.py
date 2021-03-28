@@ -1,6 +1,7 @@
 import collections
 import json
-
+from cbpro import AuthenticatedClient
+import cm_secrets
 # Order is a fundamental component of coinmaker.
 # Orders should be able to be seamlessly passed around different parts of the program. 
 # Using collections.namedtuple for immutablity
@@ -46,6 +47,9 @@ class Order:
         """
         pass
 
+def fetch_all_orders():
+    auth_client = AuthenticatedClient(**cm_secrets.get_coinbase_credentials())
+    
 
 # class MarketBuy(Order):
 #     def __init__(self):

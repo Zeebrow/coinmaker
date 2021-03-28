@@ -2,11 +2,12 @@ import os
 
 DEFAULT_SECRETS_FILEPATH = ''
 DEFAULT_CONFIG_FILEPATH = ''
+DEFAULT_DB_FILEPATH = ''
 
 if os.name == 'nt':
     DEFAULT_SECRETS_FILEPATH = 'C:\\Users\\MikeAdmin\\Documents\\Python\\Projects\\coinmaker\\secrets'
     DEFAULT_CONFIG_FILEPATH = 'C:\\Users\\MikeAdmin\\Documents\\Python\\Projects\\coinmaker\\etc\\coinmaker.conf'
-
+    DEFAULT_DB_FILEPATH = 'C:\\Users\\MikeAdmin\\Documents\\Python\\Projects\\coinmaker\\var\\sqlite3db'
 elif os.name == 'posix':
     pass
 
