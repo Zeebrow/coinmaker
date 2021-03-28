@@ -74,8 +74,13 @@ class Order:
     def __repr__(self):
         return self.order
 
+    def set_values(self, _order: NT_Order):
+        pass
+
+
     def show(self, indent=2):
-        print(json.dumps(self.order, indent=indent))
+        for key in self.order._fields:
+            print(key + " = " + getattr(self.order, key))
 
     def persist(self, database_connection):
         """
