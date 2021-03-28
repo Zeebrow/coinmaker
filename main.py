@@ -1,6 +1,6 @@
 import sys, json, collections
 import cbpro
-import cm_order, cm_coin, cm_split
+import cm_order, cm_coin, cm_split, cm_secrets
 
 """
 Coin Maker
@@ -17,7 +17,7 @@ as well as how large the split return is.
 
 TODO: learn about stop orders
 """
-test_data = {
+Test_Order = {
   "id": "74130f08-baac-4430-b1ec-5aee0df98379",
   "product_id": "ETH-USD",
   "profile_id": "bce73511-6c46-48fd-83c1-31002ed36d93", 
@@ -35,32 +35,12 @@ test_data = {
   "status": "done", 
   "settled": "true"
 }
-print(json.dumps(test_data,indent=2))
-Test_Order = collections.namedtuple("Test_Order", [
-    "id",
-    "product_id",
-    "profile_id", 
-    "side",
-    "funds",
-    "specified_funds",
-    "type",
-    "post_only",
-    "created_at",
-    "done_at", 
-    "done_reason", 
-    "fill_fees", 
-    "filled_size",  
-    "executed_value", 
-    "status", 
-    "settled"
-])
-tt = Test_Order(**test_data)
-a = cm_order.Order()
 
 print("Coin Maker")
 print("------------------------------------")
 # for k in tt._fields:
 #     print(k, '->', getattr(tt, k))
-
+a = cm_order.Order(**Test_Order)
 
 a.show()
+

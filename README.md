@@ -22,20 +22,20 @@
 {
   "id": "74130f08-baac-4430-b1ec-5aee0df98379",
   "product_id": "ETH-USD",
-  "profile_id": "bce73511-6c46-48fd-83c1-31002ed36d93", <-----------------------------------------------------
+  "profile_id": "bce73511-6c46-48fd-83c1-31002ed36d93", 
   "side": "buy",
   "funds": "9.9502487500000000",
   "specified_funds": "10.0000000000000000",
   "type": "market",
-  "post_only": false,
+  "post_only": "false",
   "created_at": "2021-03-17T07:34:01.972518Z",
-  "done_at": "2021-03-17T07:34:01.982Z", <-----------------------------------------------------
-  "done_reason": "filled", <-----------------------------------------------------
+  "done_at": "2021-03-17T07:34:01.982Z", 
+  "done_reason": "filled", 
   "fill_fees": "0.0497512000275000", 
   "filled_size": "0.00558165",  
   "executed_value": "9.9502400055000000", 
   "status": "done", 
-  "settled": true
+  "settled": "true"
 }
 
 ##Limit Buy
