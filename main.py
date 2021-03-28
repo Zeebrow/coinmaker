@@ -2,7 +2,9 @@ import sys, json, collections
 import cbpro
 import cm_order, cm_secrets
 import sqlite3
+import cm_sqlite3_backend as db
 from CONSTANTS import *
+import logging
 """
 Coin Maker
 Input how much $USD you want to make, and how much you are willing to invest.
@@ -18,6 +20,14 @@ as well as how large the split return is.
 
 TODO: learn about stop orders
 """
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+sh = logging.StreamHandler()
+fh = logging.FileHandler(DEFAULT_LOG_FILEPATH)
+logger.addHandler(sh)
+logger.addHandler(fh)
+
+
 Test_Order = {
   "id": "74130f08-baac-4430-b1ec-5aee0df98379",
   "product_id": "ETH-USD",
@@ -87,8 +97,6 @@ orders = get_order_hist(live_id_eth, cb_profile_name='coinbase_secrets')
 #     }
 #     print(order)
 
-guinea_pig_order_id = 'ce0bfa07-50a2-4a33-a639-b30afbce0983'
-
 def get_order_details(order_id, cb_profile_name='coinbase_sandbox'):
     """
     Get details of an order, to match cm_order
@@ -96,8 +104,6 @@ def get_order_details(order_id, cb_profile_name='coinbase_sandbox'):
     auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(cb_profile_name=cb_profile_name))
     return auth_client.get_order(order_id)
 
-o1 = get_order_details(guinea_pig_order_id, cb_profile_name='coinbase_secrets')
-print(o1)
 
 record_list = []
 order_list_dict = []
@@ -133,34 +139,38 @@ for record in record_list:
     #             i.write()
     #             f.write(record)
 
-def init_db(db_filepath):
-    db_conn = sqlite3.connect(db_filepath)
-    cur = db_conn.cursor()
-    cur.execute("""
-CREATE TABLE btc_filled_orders
-(id text, product_id text, profile_id text, side text, funds text, specified_funds text, type text, post_only text, 
-created_at text, done_at text, done_reason text, fill_fees text, filled_size text, executed_value text, status text, settled text)
-""")
-    db_conn.close()
+table = 'btc_filled_orders'
+db.nuke(table, DEFAULT_DB_FILEPATH, are_you_sure=True)
+db.init_db(db_filepath=DEFAULT_DB_FILEPATH, table=table)
+db.commit_bulk(record_list,table,DEFAULT_DB_FILEPATH)
+# def init_db(db_filepath):
+#     db_conn = sqlite3.connect(db_filepath)
+#     cur = db_conn.cursor()
+#     cur.execute("""
+# CREATE TABLE btc_filled_orders
+# (id text, product_id text, profile_id text, side text, funds text, specified_funds text, type text, post_only text, 
+# created_at text, done_at text, done_reason text, fill_fees text, filled_size text, executed_value text, status text, settled text)
+# """)
+#     db_conn.close()
 
-def save_order(records):
-    # init_db(DEFAULT_DB_FILEPATH)
-    db_conn = sqlite3.connect(DEFAULT_DB_FILEPATH)
-    cur = db_conn.cursor()
-    for rec in records:
-        print( 'Saving {} to database...'.format(rec) )
-        cur.execute('INSERT INTO btc_filled_orders VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', rec) 
-    db_conn.close()
-print('-------------------------------------------------------------------------------------')
-print('Indexes (ids):')
-print(index)
-print('-------------------------------------------------------------------------------------')
-print('All orders:')
-for order in order_list_dict:
-    print(order)
-print('-------------------------------------------------------------------------------------')
-print('Record list:')
-for record in record_list:
-    print(record)
+# def save_order(records):
+#     # init_db(DEFAULT_DB_FILEPATH)
+#     db_conn = sqlite3.connect(DEFAULT_DB_FILEPATH)
+#     cur = db_conn.cursor()
+#     for rec in records:
+#         print( 'Saving {} to database...'.format(rec) )
+#         cur.execute('INSERT INTO btc_filled_orders VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', rec) 
+#     db_conn.close()
+# print('-------------------------------------------------------------------------------------')
+# print('Indexes (ids):')
+# print(index)
+# print('-------------------------------------------------------------------------------------')
+# print('All orders:')
+# for order in order_list_dict:
+#     print(order)
+# print('-------------------------------------------------------------------------------------')
+# print('Record list:')
+# for record in record_list:
+#     print(record)
 
-save_order(record_list)
+# save_order(record_list)

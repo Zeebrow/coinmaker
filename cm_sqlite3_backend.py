@@ -19,30 +19,26 @@ def init_db(db_filepath, table):
     except sqlite3.OperationalError:
         logger.error(f"Could not connect to db as {db_filepath}. Does it exist?")
     cur = db_conn.cursor()
-
-    try:
-        cur.execute(f"""
-            CREATE TABLE IF NOT EXISTS {table} 
-            (id text, 
-            product_id text, 
-            profile_id text, 
-            side text, 
-            funds text, 
-            specified_funds text, 
-            type text, 
-            post_only text, 
-            created_at text, 
-            done_at text, 
-            done_reason text, 
-            fill_fees text, 
-            filled_size text, 
-            executed_value text, 
-            status text, 
-            settled text)
-            """)
-        logger.info(f"Created table {table}.")
-    except sqlite3.OperationalError:
-        pass
+    cur.execute(f"""
+        CREATE TABLE IF NOT EXISTS {table} 
+        (id text, 
+        product_id text, 
+        profile_id text, 
+        side text, 
+        funds text, 
+        specified_funds text, 
+        type text, 
+        post_only text, 
+        created_at text, 
+        done_at text, 
+        done_reason text, 
+        fill_fees text, 
+        filled_size text, 
+        executed_value text, 
+        status text, 
+        settled text)
+        """)
+    logger.info(f"Created table {table}.")
 
     db_conn.close()
 
