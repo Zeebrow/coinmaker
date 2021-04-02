@@ -24,6 +24,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 sh = logging.StreamHandler()
 fh = logging.FileHandler(DEFAULT_LOG_FILEPATH)
+sh.setFormatter(logging.Formatter( '--TEST--%(asctime)s - %(name)s - %(levelname)s - %(message)s' ))
+fh.setFormatter(logging.Formatter( '--TEST--%(asctime)s - %(name)s - %(levelname)s - %(message)s' ))
 logger.addHandler(sh)
 logger.addHandler(fh)
 
@@ -49,11 +51,9 @@ Test_Order = {
 
 print("Coin Maker")
 print("------------------------------------")
-# for k in tt._fields:
-#     print(k, '->', getattr(tt, k))
-a = cm_order.Order(**Test_Order)
 
-# a.show()
+###################################################################################################################
+# STEP 1 get account info
 def get_account_info(cb_profile_name='coinbase_sandbox'):
     auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(cb_profile_name=cb_profile_name))
     accts = auth_client.get_accounts()
@@ -63,7 +63,7 @@ def get_account_info(cb_profile_name='coinbase_sandbox'):
             active_accts.append(acct)
     return active_accts
 
-accts = get_account_info()
+# accts = get_account_info()
 # print(accts)
 id_btc = 'd75cd20a-dbe1-4942-b473-209ee48cffa5'
 id_eth = '920c879b-c310-44b4-b61d-91e7ca18bcf3'
@@ -74,6 +74,17 @@ accts_live = get_account_info('coinbase_secrets')
 live_id_btc = '3fa53d16-7da5-4272-bfbf-bc9cc8ac698e'
 live_id_eth = 'aafb8af7-a54f-496a-af0f-aa660e864104'
 live_id_usd = '984037ca-36e9-4b7f-a2ee-33ee8d2fdab2'
+
+
+###################################################################################################################
+# Step 2 Get orders
+def get_order_details(order_id, cb_profile_name='coinbase_sandbox'):
+    """
+    Get details of an order, to match cm_order
+    """
+    auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(cb_profile_name=cb_profile_name))
+    return auth_client.get_order(order_id)
+
 
 def get_order_hist(acct_id, cb_profile_name='coinbase_sandbox'):
     """
@@ -87,23 +98,6 @@ def get_order_hist(acct_id, cb_profile_name='coinbase_sandbox'):
         with open('var\\incoming_orders.txt', 'w') as o:
             o.write(json.dumps(order, indent=4))
     return orders
-
-orders = get_order_hist(live_id_eth, cb_profile_name='coinbase_secrets')
-# for order in orders:
-#     o = {
-#         'id': order['details']['order_id'],
-#         'product_id': order['details']['product_id'],
-
-#     }
-#     print(order)
-
-def get_order_details(order_id, cb_profile_name='coinbase_sandbox'):
-    """
-    Get details of an order, to match cm_order
-    """
-    auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(cb_profile_name=cb_profile_name))
-    return auth_client.get_order(order_id)
-
 
 record_list = []
 order_list_dict = []
@@ -139,38 +133,10 @@ for record in record_list:
     #             i.write()
     #             f.write(record)
 
+###################################################################################################################
+# Step 3 commit orders to db
+
 table = 'btc_filled_orders'
-db.nuke(table, DEFAULT_DB_FILEPATH, are_you_sure=True)
-db.init_db(db_filepath=DEFAULT_DB_FILEPATH, table=table)
+db.nuke(table=table, db_filepath=DEFAULT_DB_FILEPATH)
+db.init_db_table(db_filepath=DEFAULT_DB_FILEPATH, table=table)
 db.commit_bulk(record_list,table,DEFAULT_DB_FILEPATH)
-# def init_db(db_filepath):
-#     db_conn = sqlite3.connect(db_filepath)
-#     cur = db_conn.cursor()
-#     cur.execute("""
-# CREATE TABLE btc_filled_orders
-# (id text, product_id text, profile_id text, side text, funds text, specified_funds text, type text, post_only text, 
-# created_at text, done_at text, done_reason text, fill_fees text, filled_size text, executed_value text, status text, settled text)
-# """)
-#     db_conn.close()
-
-# def save_order(records):
-#     # init_db(DEFAULT_DB_FILEPATH)
-#     db_conn = sqlite3.connect(DEFAULT_DB_FILEPATH)
-#     cur = db_conn.cursor()
-#     for rec in records:
-#         print( 'Saving {} to database...'.format(rec) )
-#         cur.execute('INSERT INTO btc_filled_orders VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', rec) 
-#     db_conn.close()
-# print('-------------------------------------------------------------------------------------')
-# print('Indexes (ids):')
-# print(index)
-# print('-------------------------------------------------------------------------------------')
-# print('All orders:')
-# for order in order_list_dict:
-#     print(order)
-# print('-------------------------------------------------------------------------------------')
-# print('Record list:')
-# for record in record_list:
-#     print(record)
-
-# save_order(record_list)

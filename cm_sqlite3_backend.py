@@ -12,7 +12,7 @@ logger.addHandler(sh)
 Each order must be a tuple with 16 elements
 """
 
-def init_db(db_filepath, table):
+def init_db_table(db_filepath, table):
     try:
         db_conn = sqlite3.connect(db_filepath)
         logger.debug(f"Connected to db {db_filepath}")
@@ -92,13 +92,13 @@ if __name__ == '__main__':
     ]
     table = 'btc_filled_orders'
     nuke(table, DEFAULT_DB_FILEPATH, are_you_sure=True)
-    init_db(table=table, db_filepath=DEFAULT_DB_FILEPATH)
+    init_db_table(table=table, db_filepath=DEFAULT_DB_FILEPATH)
     #sc_commit_order(table=table, db_filepath=DEFAULT_DB_FILEPATH)
     for rec in test_recs:
         _o = rec
         commit_order(_o,table,DEFAULT_DB_FILEPATH)
     nuke(table, DEFAULT_DB_FILEPATH, are_you_sure=True)
-    init_db(table=table, db_filepath=DEFAULT_DB_FILEPATH)
+    init_db_table(table=table, db_filepath=DEFAULT_DB_FILEPATH)
     commit_bulk(orders=test_recs,table=table,db_filepath=DEFAULT_DB_FILEPATH)
     # for rec in test_recs:
     #     print(f"{rec}")
