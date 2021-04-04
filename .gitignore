@@ -3,6 +3,7 @@
 secrets
 etc/
 var/
+rnd/
 ######################################
 #Github defaults below
 

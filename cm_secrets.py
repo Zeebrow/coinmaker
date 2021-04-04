@@ -17,3 +17,14 @@ def get_coinbase_credentials(cb_profile_name='coinbase_sandbox'):
     d['passphrase'] = config[cb_profile_name]['api_password']
     d['api_url']    = config[cb_profile_name]['api_url']
     return d
+
+def get_influxdb_credentials():
+    creds = {}
+    config = configparser.ConfigParser()
+    config.read(DEFAULT_SECRETS_FILEPATH)
+    creds['host']       = config['influxdb']['host']
+    creds['port']       = config['influxdb']['port']
+    creds['username']   = config['influxdb']['username']
+    creds['password']   = config['influxdb']['password']
+    # creds['database']         = config['influxdb']['database']
+    return creds
