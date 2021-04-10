@@ -106,6 +106,8 @@ def clean_db(db):
     # clent.drop_user(influxdb_user)
 
 def idb_commit_cb_order(order: dict, database='test_order_history'):
+    """Commit a single order to InfluxDB"""
+
     if set(cb_order_skel.keys()) != set(order.keys()):
         print("Malformed order!")
         return False
@@ -144,3 +146,6 @@ def idb_commitbulk_cb_order(orders: list, database='test_order_history'):
     dbc.switch_database(database)
     dbc.write_points(_cl)
     dbc.close()
+
+def save_datapoint():
+    pass

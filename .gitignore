@@ -1,9 +1,13 @@
 
-
+secrets.py
 secrets
 etc/
 var/
 rnd/
+
+# vs code
+settings.json
+
 ######################################
 #Github defaults below
 
