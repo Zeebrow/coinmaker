@@ -1,5 +1,10 @@
 #Coinmaker
 
+Plan:
+1. make arbitrary buys and sells on Default profile
+2. While this is happening, coinmaker is open, tracking orders made
+3. A running talley of the break-even point is returned, until closed.
+
 ##Market Buy (not settled)
 {
   "id": "74130f08-baac-4430-b1ec-5aee0df98379",
