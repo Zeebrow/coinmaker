@@ -1,0 +1,9 @@
+ 1017  yum install cairo-gobject
+ 1018  sudo yum install cairo-gobject
+ 1020  sudo yum install libcairo2-dev
+ 1021  sudo yum install libcairo3-dev
+ 1011  sudo dnf install cairo-devel pkg-config python3-devel
+ 1014  sudo dnf install python3-gobject gtk3
+ 1015  sudo dnf install gcc gobject-introspection-devel cairo-devel pkg-config python3-devel gtk3
+ 1023  sudo dnf install cairo-gobject-devel
+
