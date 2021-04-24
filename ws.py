@@ -4,6 +4,12 @@ import json
 import time
 import sys
 import secrets
+import json, hmac, hashlib, time, requests, base64
+from requests.auth import AuthBase
+
+
+
+
 
 cb_secs = secrets.cb_credentials
 # cb_credentials = {'key': '9e0799466ea77e92d3f8649005daaa77', 'b64secret': 'huOhWkArWQX0iCWuUAuBOY99MnTvwyQym69US+sqRXE1qNB6Lt016cJMJRE/Zq/87MsNjLGEC+Fcgnb7vTngDQ==', 'passphrase': '6s5hewt7e5g', 'api_url': 'https://api-public.sandbox.pro.coinbase.com'}
@@ -11,34 +17,16 @@ cb_secs = secrets.cb_credentials
 class MyWebsocketClient(cbpro.WebsocketClient):
     def __init__(
             self,
-            #url="wss://ws-feed.pro.coinbase.com",
-            #products=None,
-            #message_type="subscribe",
-            #mongo_collection=None,
-            #should_print=True,
-            #auth=False,
-            #api_key=cb_secs['key'],
-            #    api_secret=cb_secs['b64secret'],
-            #    api_passphrase=cb_secs['passphrase'],
-            # Make channels a required keyword-only argument; see pep3102
-            #*,
-            # Channel options: ['ticker', 'user', 'matches', 'level2', 'full']
             channels=['ticker']
             ):
         super().__init__(
-            #url="wss://ws-feed.pro.coinbase.com",
-            #products=None,
-            #message_type="subscribe",
-            #mongo_collection=None,
-            #should_print=True,
-            #auth=False,
             api_key=cb_secs['key'],
             api_secret=cb_secs['b64secret'],
             api_passphrase=cb_secs['passphrase'],
             # Make channels a required keyword-only argument; see pep3102
             #*,
             # Channel options: ['ticker', 'user', 'matches', 'level2', 'full']
-            channels=['ticker'])
+            channels=['user'])
     def on_open(self):
         self.url = "wss://ws-feed.pro.coinbase.com/"
         self.products = ['ETH-USD']

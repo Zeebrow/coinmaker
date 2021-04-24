@@ -15,6 +15,26 @@ logger = logging.getLogger(__name__)
 cb_profile_name='coinbase_secrets'
 auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(cb_profile_name=cb_profile_name))
 
+def c_get_account_info(cb_profile_name='coinbase_sandbox', rate_limit=0.5, _cache={}):
+    """
+    Returns:
+        list of accounts with balance > 0
+    """
+    if cb_profile_name in _cache:
+        return _cache[cb_profile_name]
+    accts = auth_client.get_accounts() # list of accounts
+    active_accts = []
+    i=1
+    for acct in accts:
+        if float(acct['balance']) > 0:
+            active_accts.append(acct)
+        print(f"\rGot {i} accounts so far...", end='')
+        # print(f".", end='')
+        time.sleep(rate_limit)
+        i+=1
+    print(f"\rGot {len(active_accts)} accounts." + " "*20)
+    _cache[cb_profile_name] = active_accts
+    return active_accts
 def get_account_info(cb_profile_name='coinbase_sandbox', rate_limit=0.5):
     """
     Returns:
@@ -81,7 +101,7 @@ def get_order_history(acct_id, acct_canonical_name=None, cb_profile_name='coinba
     return order_ids
     
 
-def get_order_details(order_id, cb_profile_name='coinbase_sandbox'):
+def get_order_details(order_id, cb_profile_name='coinbase_sandbox', _cache={}):
     """
     Get details of an order, to match cm_order
     Gets one order at a time, so rate limiting is handled by whatever calls this function.
@@ -89,16 +109,17 @@ def get_order_details(order_id, cb_profile_name='coinbase_sandbox'):
         dict
     """
     # For the one wierd case where order_id was '3c958bf7-fcc3-4881-8180-b2f44823e2d2-c7b7-48eb-bfba-4ada110178cd'
-
+    if order_id in _cache:
+        return _cache[order_id]
 
     order = auth_client.get_order(order_id)
-    
     if 'message' in order.keys():
         logger.error(f"Could not get order {order}.")
         print(f"ERROR: {order['message']} for order_id {order_id}")
         time.sleep(5)
         return {'retry_order_id': order_id}
     else:
+        _cache[order_id] = order
         logger.debug(f"get_order_details order: {order}")
         return order
 
