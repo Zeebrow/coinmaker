@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 class Asset(AuthedClient):
     def __init__(self, profile_name, *args, **kwargs):
         super().__init__(profile_name=profile_name)
-        self.__dict__.update(kwargs)
+        self.__dict__.update(**kwargs)
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
