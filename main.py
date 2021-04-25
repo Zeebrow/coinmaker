@@ -54,8 +54,8 @@ print("------------------------------------")
 
 ###################################################################################################################
 # STEP 1 get account info
-def get_account_info(cb_profile_name='coinbase_sandbox'):
-    auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(cb_profile_name=cb_profile_name))
+def get_account_info(profile='coinbase_sandbox'):
+    auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(profile=profile))
     accts = auth_client.get_accounts()
     active_accts = []
     for acct in accts:
@@ -78,20 +78,20 @@ live_id_usd = '984037ca-36e9-4b7f-a2ee-33ee8d2fdab2'
 
 ###################################################################################################################
 # Step 2 Get orders
-def get_order_details(order_id, cb_profile_name='coinbase_sandbox'):
+def get_order_details(order_id, profile='coinbase_sandbox'):
     """
     Get details of an order, to match cm_order
     """
-    auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(cb_profile_name=cb_profile_name))
+    auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(profile=profile))
     return auth_client.get_order(order_id)
 
 
-def get_order_hist(acct_id, cb_profile_name='coinbase_sandbox'):
+def get_order_hist(acct_id, profile='coinbase_sandbox'):
     """
     Used solely to get each order's id field for use in get_order_details (should return list of id's instead, w/e)
     """
     orders = []
-    auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(cb_profile_name=cb_profile_name))
+    auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(profile=profile))
     h = auth_client.get_account_history(acct_id)
     for order in h:
         orders.append(order)
@@ -101,9 +101,9 @@ def get_order_hist(acct_id, cb_profile_name='coinbase_sandbox'):
 
 record_list = []
 order_list_dict = []
-for order in get_order_hist(live_id_btc, cb_profile_name='coinbase_secrets'):
+for order in get_order_hist(live_id_btc, profile='coinbase_secrets'):
     print('Getting order {}...'.format( order['details']['order_id'] ))
-    h = get_order_details(order['details']['order_id'],cb_profile_name='coinbase_secrets')
+    h = get_order_details(order['details']['order_id'],profile='coinbase_secrets')
     print('\t\t{}'.format(h))
     order_list_dict.append(h)
     record = (
