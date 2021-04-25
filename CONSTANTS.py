@@ -12,6 +12,8 @@ log.debug(f"OS type {os.name}")
 
 homedir = ['/home/'+os.getlogin()+'/' if os.name == 'posix' else '/Users/'+os.getlogin()+'/']
 
+#JSON_INDENT_DEFAULT = None
+DEFAULT_JSON_INDENT = 4
 DEFAULT_SECRETS_FILEPATH = ''
 DEFAULT_CONFIG_FILEPATH = ''
 DEFAULT_DB_FILEPATH = ''

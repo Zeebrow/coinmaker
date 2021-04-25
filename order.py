@@ -1,6 +1,7 @@
 import logging
 import json
 import inspect
+import CONSTANTS as C
 
 log = logging.getLogger(__name__)
 
@@ -59,6 +60,9 @@ class Order(object):
         self.executed_value = executed_value
         self.status = status
         self.settled = settled
+
+    def __str__(self):
+        return json.dumps(self._asdict(), indent=C.DEFAULT_JSON_INDENT)
 
     def __repr__(self):
         return self._asdict()
