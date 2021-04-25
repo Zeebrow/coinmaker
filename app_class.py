@@ -67,12 +67,9 @@ if __name__ == '__main__':
     profile = 'coinbase_secrets'
     app = App(profile)
     # print(App.Profile)
+    print(app.profile.assets[0])
     print(app.profile.assets[0].get_order_details('f1419466-0ebe-464b-a549-7dbdb9847f39'))
-    for order in app.profile.assets[0].get_order_history():
-        print(order)
-        o = app.profile.assets[0].get_order_details(order)
-        o.save('myflie.txt')
-    for order in app.profile.assets[0].get_order_history():
-        print(order)
-        o = app.profile.assets[0].get_order_details(order)
-        o.save('myflie.txt')
+    # for order in app.profile.assets[0].get_order_history():
+    #     print(order)
+    #     o = app.profile.assets[0].get_order_details(order)
+    #     o.save('myflie.txt')

@@ -10,13 +10,15 @@ class Profile(AuthedClient):
         super().__init__(profile_name=p)
         log.debug("Creating Profile object")
         self.profile = p
-        self.assets = []
+        self._assets = []
         for asset in self.set_assets(self.profile):
-            self.assets.append(asset)
+            self._assets.append(asset)
         self.holds = None
         self.available_balance = None
-    # def __repr__(self):
-    #     return self.profile
+
+    @property
+    def assets(self):
+        return self._assets
 
     def get_assets(self, profile):
         log.debug(f"Getting assets for profile: {profile}...")

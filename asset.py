@@ -8,11 +8,36 @@ from authed_client import AuthedClient
 log = logging.getLogger(__name__)
 
 class Asset(AuthedClient):
-    def __init__(self, profile_name, *args, **kwargs):
+    ex_asset = {
+        'id': '984037ca-36e9-4b7f-a2ee-33ee8d2fdab2', 
+        'currency': 'USD', 
+        'balance': '210.0217553782342500', 
+        'hold': '0.0000000000000000', 
+        'available': '210.02175537823425', 
+        'profile_id': 'bce73511-6c46-48fd-83c1-31002ed36d93', 
+        'trading_enabled': True
+    }
+
+    def __init__(self, profile_name, currency, balance, hold, available, profile_id, trading_enabled, id=None, id_=None ):
         super().__init__(profile_name=profile_name)
-        self.__dict__.update(**kwargs)
-        for key in kwargs:
-            setattr(self, key, kwargs[key])
+        if id:
+            self.id_ = id
+            del id
+        else:
+            self.id_ = id_
+        self.profile_name = profile_name
+        self.currency = currency
+        self.balance = balance
+        self.hold = hold
+        self.available = available
+        self.profile_id = profile_id
+        self.trading_enabled = trading_enabled
+
+    # def __repr__(self):
+    #     return str(self.id_)
+
+    def json(self):
+        return str(self.__dict__)
 
     def get_order_history(self, rate_limit_seconds=0.3):
             """
@@ -26,8 +51,8 @@ class Asset(AuthedClient):
             # auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(profile=profile))
             i = 0
 
-            for order in self.get_account_history(self.id):
-                log.debug(f"\rGetting order {i} in account {self.id}...")
+            for order in self.get_account_history(self.id_):
+                log.debug(f"\rGetting order {i} in account {self.id_}...")
                 # # Error handling
                 # if 'details' not in order:
                 #     if 'message' in order:
@@ -58,7 +83,7 @@ class Asset(AuthedClient):
         if order_id in _cache:
             return _cache[order_id]
         h = self.get_order(order_id)
-
+        print(h)
         # Do checking here
         if 'id' not in h:
             log.error(f"Bad order params detected before creating order! {h}")
