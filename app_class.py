@@ -1,78 +1,23 @@
 import logging
+import json
 from time import sleep
-import cm_secrets
-from cbpro import AuthenticatedClient
+
+# from asset import Asset
+from profile import Profile
+from authed_client import AuthedClient
+from order import Order
 
 tracked_currencies = ["BTC", "ETH", "BCH", "USD"]
 log = logging.getLogger(__name__)
 
-class App(AuthenticatedClient):
+class App(AuthedClient):
     def __init__(self, p):
-        self.accbtc = None
-        self.secrets = cm_secrets.get_coinbase_credentials(p)
-        super().__init__(**self.secrets)
+        super().__init__(profile_name=p)
         self.p = p 
         self.profile = self.init_profile()
-        del self.secrets
     
     def init_profile(self):
-        return App.Profile(self, self.p)
-
-    class Profile(object):
-        def __init__(self, app, name):
-            log.debug("Creating Profile object")
-            self.name = name
-            self.assets = []
-            self.holds = None
-            self.available_balance = None
-
-        def set_assets(self):
-            pass
-            # for asset in app.get_assets(name):
-            #     self.assets.append()
-
-        class Asset(object):
-            def __init__(self, name):
-                log.info("Creating Asset object")
-                self.name = name
-                self.id = None
-                self.currency = None
-                self.bal = None
-                self.hold = None
-                self.available = None
-                self._profile = None
-
-            @property
-            def id(self):
-                return self.id
-
-            @property
-            def bal(self):
-                pass
-
-        def set_accounts(self, accts_lofd: list):
-            pass
-
-
-    def get_assets(self, profile):
-        log.debug(f"Getting assets for profile: {profile}...")
-        active_assets = []
-        ct = 0
-        for asset in super().get_accounts():
-            d = {}
-            ct += 1
-            log.debug(f"Got asset: {asset}")
-            if asset['currency'] in tracked_currencies:
-                d[asset['currency']] = asset['id'] 
-                active_assets.append(d)
-        log.info(f"Got {len(active_assets)} assets out of {ct} total asssets.")
-        return active_assets
-
-    def set_accts(self, acct: dict):
-        self.btcid = acct['BTC']
-        self.ethid = acct['ETH']
-        self.accbch = acct['BCH']
-        self.accusd = acct['USD']
+        return Profile(self.p)
 
     def get_order_history(self, acct_id, acct_canonical_name=None, rate_limit_seconds=0.3):
         """
@@ -83,9 +28,7 @@ class App(AuthenticatedClient):
         # _test_account_id = '3fa53d16-7da5-4272-bfbf-bc9cc8ac698e'
         order_ids = []
         txfers = []
-        # auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(profile=profile))
         i = 0
-
         for order in self.get_account_history(acct_id):
             log.debug(f"\rGetting order {i} in account {acct_canonical_name}...", end="")
             # # Error handling
@@ -113,23 +56,23 @@ class App(AuthenticatedClient):
             sleep(rate_limit_seconds)
             i+=1
             yield order['details']['order_id']
-        # print(f"\rGot {len(order_ids)} ids for {acct_id} account." + " "*20)
-        # if len(txfers) > 0:
-        #     print(f"There were {len(txfers)} transfer-type orders. These are not returned in resulting order_ids list!")
-        # # log.info(f"Got {len(order_ids)} order ids.")
-        # return order_ids
     
 if __name__ == '__main__':
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     sh = logging.StreamHandler()
     sh.setFormatter(logging.Formatter( '--TEST--%(asctime)s - %(name)s - %(levelname)s - %(message)s' ))
     logger.addHandler(sh)
     logger.info("BEGIN MYSTICAL JOURNEY")
     profile = 'coinbase_secrets'
     app = App(profile)
-    print(app.profile.name)
-    # accts = app.get_assets(profile)
-    
-    # print(app.get_accts())
-    # print(app.get_products())
+    # print(App.Profile)
+    print(app.profile.assets[0].get_order_details('f1419466-0ebe-464b-a549-7dbdb9847f39'))
+    for order in app.profile.assets[0].get_order_history():
+        print(order)
+        o = app.profile.assets[0].get_order_details(order)
+        o.save('myflie.txt')
+    for order in app.profile.assets[0].get_order_history():
+        print(order)
+        o = app.profile.assets[0].get_order_details(order)
+        o.save('myflie.txt')
