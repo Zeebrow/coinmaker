@@ -6,15 +6,18 @@ log = logging.getLogger(__name__)
 tracked_currencies = ["BTC", "ETH", "BCH", "USD"]
 
 class Profile(AuthedClient):
-    def __init__(self, p):
-        super().__init__(profile_name=p)
+    def __init__(self, profile_name):
+        super().__init__(profile_name=profile_name)
         log.debug("Creating Profile object")
-        self.profile = p
+        self.profile = profile_name
         self._assets = []
         for asset in self.set_assets(self.profile):
             self._assets.append(asset)
         self.holds = None
         self.available_balance = None
+
+    def __str__(self):
+        return self.profile
 
     @property
     def assets(self):
