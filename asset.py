@@ -46,7 +46,6 @@ class Asset(AuthedClient):
                 list (of order_ids)
             """
             # _test_account_id = '3fa53d16-7da5-4272-bfbf-bc9cc8ac698e'
-            order_ids = []
             txfers = []
             # auth_client = cbpro.AuthenticatedClient(**cm_secrets.get_coinbase_credentials(profile=profile))
             i = 0

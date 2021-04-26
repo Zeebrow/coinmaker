@@ -12,6 +12,9 @@ logger.addHandler(sh)
 Each order must be a tuple with 16 elements
 """
 
+def write_order(order: dict) -> bool:
+    pass
+
 def init_db_table(db_filepath, table):
     try:
         db_conn = sqlite3.connect(db_filepath)

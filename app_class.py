@@ -11,13 +11,13 @@ tracked_currencies = ["BTC", "ETH", "BCH", "USD"]
 log = logging.getLogger(__name__)
 
 class App(AuthedClient):
-    def __init__(self, p):
-        super().__init__(profile_name=p)
-        self.p = p 
+    def __init__(self, profile_name):
+        super().__init__(profile_name=profile_name)
+        self.profile_name = profile_name 
         self.profile = self.init_profile()
     
     def init_profile(self):
-        return Profile(self.p)
+        return Profile(self.profile_name)
 
     def get_order_history(self, acct_id, acct_canonical_name=None, rate_limit_seconds=0.3):
         """
@@ -26,7 +26,6 @@ class App(AuthedClient):
             list (of order_ids)
         """
         # _test_account_id = '3fa53d16-7da5-4272-bfbf-bc9cc8ac698e'
-        order_ids = []
         txfers = []
         i = 0
         for order in self.get_account_history(acct_id):
@@ -58,6 +57,7 @@ class App(AuthedClient):
             yield order['details']['order_id']
     
 if __name__ == '__main__':
+    import order
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
     sh = logging.StreamHandler()
@@ -68,8 +68,14 @@ if __name__ == '__main__':
     app = App(profile)
     # print(App.Profile)
     print(app.profile.assets[0])
-    print(app.profile.assets[0].get_order_details('f1419466-0ebe-464b-a549-7dbdb9847f39'))
+    order1 = app.profile.assets[0].get_order_details('f1419466-0ebe-464b-a549-7dbdb9847f39')
+    print(order1)
+    print(type(order1))
     # for order in app.profile.assets[0].get_order_history():
     #     print(order)
     #     o = app.profile.assets[0].get_order_details(order)
     #     o.save('myflie.txt')
+    o = order.Order.ex_order
+    o['id_'] = o['id'] + 'asdf'
+    o['type_'] = o['type'] + 'asdf'
+    print(Order(**o))
