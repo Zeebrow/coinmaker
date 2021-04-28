@@ -10,7 +10,10 @@ user = os.getlogin()
 log.debug(f"Running {json.dumps({'program': sys.argv[0], 'as_user': user})}")
 log.debug(f"OS type {os.name}")
 
-homedir = ['/home/'+os.getlogin()+'/' if os.name == 'posix' else '/Users/'+os.getlogin()+'/']
+
+_homedir = '/home/'+os.getlogin()+'/' if os.name == 'posix' else '/Users/'+os.getlogin()+'/'
+
+#_app_dir = _homedir + Path('Documents/Python/Projects/coinmaker/')
 
 #JSON_INDENT_DEFAULT = None
 DEFAULT_JSON_INDENT = 4
@@ -20,17 +23,17 @@ DEFAULT_DB_FILEPATH = ''
 DEFAULT_LOGS_FILEPATH = ''
 
 if os.name == 'nt':
-    #_default_secrets_filepath = homedir + str(Path('Documents/Python/Projects/coinmaker/secrets') )
-    #DEFAULT_SECRETS_FILEPATH = homedir + Path('Documents/Python/Projects/coinmaker/secrets')
+    #_default_secrets_filepath = _homedir + str(Path('Documents/Python/Projects/coinmaker/secrets') )
+    #DEFAULT_SECRETS_FILEPATH = _homedir + Path('Documents/Python/Projects/coinmaker/secrets')
     DEFAULT_SECRETS_FILEPATH = 'C:\\Users\\MikeAdmin\\Documents\\Python\\Projects\\coinmaker\\secrets'
-    DEFAULT_CONFIG_FILEPATH = 'C:\\Users\\MikeAdmin\\Documents\\Python\\Projects\\coinmaker\\etc\\coinmaker.conf'
+    DEFAULT_CONFIG_FILEPATH = 'C:\\Users\\MikeAdmin\\Documents\\Python\\Projects\\coinmaker\\etc\\config'
     DEFAULT_DB_FILEPATH = 'C:\\Users\\MikeAdmin\\Documents\\Python\\Projects\\coinmaker\\var\\sqlite3db'
     DEFAULT_LOG_FILEPATH = 'C:\\Users\\MikeAdmin\\Documents\\Python\\Projects\\coinmaker\\logs\\coinmaker.log'
 elif os.name == 'posix':
     install_dir = '/opt/coinmaker/'
     config_dir = '/etc/opt/coinmaker/'
-    secrets_dir = homedir + '.dcabot_secrets'
-    DEFAULT_SECRETS_FILEPATH = homedir + '.dcabot_secrets'
+    secrets_dir = _homedir + Path('.dcabot_secrets')
+    DEFAULT_SECRETS_FILEPATH = _homedir + Path('.dcabot_secrets')
     DEFAULT_CONFIG_FILEPATH = '/etc/opt/coinmaker/'
     #DEFAULT_CONFIG_FILEPATH = '/home/mike/bin/coinmaker/coinmaker/etc/coinmaker.conf'
     DEFAULT_DB_FILEPATH = '/home/mike/bin/coinmaker/coinmaker/var/sqlitedb'

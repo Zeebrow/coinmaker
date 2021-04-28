@@ -28,7 +28,7 @@ class DBClient(InfluxDBClient):
     """
 
     def __init__(self, database):
-        super().__init__(**get_influxdb_credentials())
+        super().__init__(database=database,**get_influxdb_credentials())
         log.debug("Created DBClient.")
         self.database = database
         
@@ -43,9 +43,6 @@ class DBClient(InfluxDBClient):
         #this will not work
         self.switch_user(username=user, password=pw)
 
-    def commit_cb_order(self, order: dict):
-        pass
-
     def get_measurements(self):
         """
         Measurements = tables
@@ -59,10 +56,6 @@ class DBClient(InfluxDBClient):
     def q(self, q) -> dict:
         """lol im lazy"""
         return self.query(q).raw
-
-
-    def init_db_table(self, db_filepath, table):
-        pass
 
 
     def nuke(self, table, db_filepath, are_you_sure=False):

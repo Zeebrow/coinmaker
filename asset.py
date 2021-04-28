@@ -36,8 +36,18 @@ class Asset(AuthedClient):
     # def __repr__(self):
     #     return str(self.id_)
 
-    def json(self):
-        return str(self.__dict__)
+    @property
+    def order_history(self):
+        return self.get_order_history()
+
+    def get_detailed_order_history(self, commit=False, rate_limit_seconds=0.3):
+        for _id in self.get_order_history():
+            _order = Order(**self.get_order(_id))
+            sleep(rate_limit_seconds)
+            if commit:
+                yield _order.commitable()
+            else:
+                yield _order
 
     def get_order_history(self, rate_limit_seconds=0.3):
             """

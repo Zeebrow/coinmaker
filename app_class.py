@@ -3,9 +3,11 @@ import json
 from time import sleep
 
 # from asset import Asset
+from db_client import DBClient # Gut says import here instead of in authed_client.py
 from profile import Profile
 from authed_client import AuthedClient
 from order import Order
+from cm_config import AppConfig
 
 tracked_currencies = ["BTC", "ETH", "BCH", "USD"]
 log = logging.getLogger(__name__)
@@ -13,8 +15,11 @@ log = logging.getLogger(__name__)
 class App(AuthedClient):
     def __init__(self, profile_name):
         super().__init__(profile_name=profile_name)
+        self.config = AppConfig()
         self.profile_name = profile_name 
         self.profile = self.init_profile()
+        self.app_config = AppConfig()
+        self.db = DBClient(self.app_config.database)
     
     def init_profile(self):
         return Profile(self.profile_name)
@@ -69,13 +74,23 @@ if __name__ == '__main__':
     # print(App.Profile)
     print(app.profile.assets[0])
     order1 = app.profile.assets[0].get_order_details('f1419466-0ebe-464b-a549-7dbdb9847f39')
-    print(order1)
-    print(type(order1))
+    # print(order1)
+    # print(type(order1))
     # for order in app.profile.assets[0].get_order_history():
     #     print(order)
     #     o = app.profile.assets[0].get_order_details(order)
     #     o.save('myflie.txt')
-    o = order.Order.ex_order
-    o['id_'] = o['id'] + 'asdf'
-    o['type_'] = o['type'] + 'asdf'
-    print(Order(**o))
+    # o = order.Order.ex_order
+    # o['id_'] = o['id'] + 'asdf'
+    # o['type_'] = o['type'] + 'asdf'
+    # print(Order(**o))
+
+    db = DBClient(database='premade')
+    d = app.profile.assets[0]
+    for ass in app.profile.assets:
+        for o in ass.get_detailed_order_history(commit=True):
+            print(f"{ass.currency} - {o}")
+            db.write_points(o)
+    # for o in d.get_detailed_order_history(commit=True):
+    #     print(o)
+    #     db.write_points(o)
